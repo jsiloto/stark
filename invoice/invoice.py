@@ -54,4 +54,21 @@ invoices = starkbank.invoice.create([
 for invoice in invoices:
     print(invoice)
 
+import time
+import requests
+from datetime import datetime
 
+WEBHOOK_URL = "http://receiver:5000/webhook"
+
+def run():
+    while True:
+        payload = {"timestamp": datetime.utcnow().isoformat(), "message": "Hello from sender"}
+        try:
+            r = requests.post(WEBHOOK_URL, json=payload)
+            print(f"[{datetime.now()}] Sent webhook: {r.status_code}")
+        except Exception as e:
+            print(f"Failed to send webhook: {e}")
+        time.sleep(3 * 60 * 60)  # wait 3 hours
+
+if __name__ == "__main__":
+    run()
