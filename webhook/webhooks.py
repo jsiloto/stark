@@ -19,7 +19,7 @@ oUQDQgAE9yvqkZBi2bp+y8JUYolrS1OVCJ94ICrrvfBJl+vavZBSeZ0dLkqu5zMW
 
 SAVE_DIR = './webhook_data'
 os.makedirs(SAVE_DIR, exist_ok=True)
-# Configure logging
+
 LOG_FILE = os.path.join(SAVE_DIR, 'webhook.log')
 logging.basicConfig(
     filename=LOG_FILE,
@@ -27,6 +27,13 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s'
 )
 
+# Configure Flask system logs to a separate file
+FLASK_LOG_FILE = os.path.join(SAVE_DIR, 'flask.log')
+flask_handler = logging.FileHandler(FLASK_LOG_FILE)
+flask_handler.setLevel(logging.INFO)
+flask_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+logging.getLogger('werkzeug').addHandler(flask_handler)
+logging.getLogger('werkzeug').propagate = False
 app = Flask(__name__)
 
 
@@ -72,9 +79,10 @@ def invoice():
         return 'No invoice data found', 400
 
     invoice = data['log']['invoice']
-    print(f"Received webhook: {invoice['id']}, Amount: {invoice['amount']}")
+    print(f"Received webhook: {invoice['id']}, Amount: {invoice['amount']}, type: {data['log']['type']}")
     print(invoice)
-    transfer_credits.generate_transfer(invoice)
+    if(data['log']['type'] == "credited"):
+        transfer_credits.generate_transfer(invoice)
 
     return '', 200
 

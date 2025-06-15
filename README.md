@@ -14,3 +14,9 @@ pip install -r webhook/requirements.txt
 ngrok http 5000
 python webhook/webhooks.py
 ```
+
+# Running with Docker
+```bash
+docker-compose up -d
+tail -f invoice/logs/invoice.log3
+```

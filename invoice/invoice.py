@@ -73,9 +73,9 @@ class InvoiceSender:
         return invoice
 
 
-    def send_invoices(self):
+    def send_invoices(self, a=1, b=1):
         invoices = []
-        for _ in range(random.randint(8, 12)):
+        for _ in range(random.randint(a, b)):
             invoices.append(self.generate_random_invoice())
         starkbank.invoice.create(invoices)
 
@@ -89,7 +89,7 @@ def main():
     if args.recurrent:
         print("Recurrent mode selected")
         while True:
-            sender.send_invoices()
+            sender.send_invoices(8, 12)
             time.sleep(3 * 60 * 60)  # wait 3 hours
         #
     else:
@@ -98,18 +98,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# WEBHOOK_URL = "http://receiver:5000/webhook"
-#
-# def run():
-#     while True:
-#         payload = {"timestamp": datetime.utcnow().isoformat(), "message": "Hello from sender"}
-#         try:
-#             r = requests.post(WEBHOOK_URL, json=payload)
-#             print(f"[{datetime.now()}] Sent webhook: {r.status_code}")
-#         except Exception as e:
-#             print(f"Failed to send webhook: {e}")
-#         time.sleep(3 * 60 * 60)  # wait 3 hours
-#
-# if __name__ == "__main__":
-#     run()
