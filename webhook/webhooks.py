@@ -53,6 +53,7 @@ class TransferCredits:
 transfer_credits = TransferCredits()
 @app.route('/invoice', methods=['POST'])
 def invoice():
+    print("============================== INVOICE ==============================")
     data = request.json['event']
     if "log" not in data:
         return 'Invalid event data', 400
@@ -62,12 +63,14 @@ def invoice():
 
     invoice = data['log']['invoice']
     print(f"Received webhook: {invoice['id']}, Amount: {invoice['amount']}")
+    print(invoice)
     transfer_credits.generate_transfer(invoice)
 
     return '', 200
 
 @app.route('/transfer', methods=['POST'])
 def transfer():
+    print("============================ Transfer Webhook ============================")
     data = request.json['event']
     if "log" not in data:
         return 'Invalid event data', 400
@@ -76,12 +79,20 @@ def transfer():
         return 'No transfer data found', 400
 
     transfer = data['log']['transfer']
-    print(f"Received webhook: {transfer}")
+    print(f"Received webhook: {data}")
 
     return '', 200
 
 
+@app.route('/other', methods=['POST'])
+def other():
+    print("============================ OTHER Webhook ============================")
+    data = request.json['event']
+    if "log" not in data:
+        return 'Invalid event data', 400
+    print(f"Received webhook: {data}")
 
+    return '', 200
 
 
 if __name__ == '__main__':

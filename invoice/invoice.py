@@ -61,7 +61,7 @@ class InvoiceSender:
     def generate_random_invoice(self):
         fakename, tax_id = random.choice(self.database)
         invoice = starkbank.Invoice(
-            amount=23571,  # R$ 235,71
+            amount=random.randint(1000, 999999),  # random amount between 1000 and 999999,  # R$ 235,71
             name=fakename,
             tax_id=tax_id,
             due=datetime.now(UTC) + timedelta(hours=1),
