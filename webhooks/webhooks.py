@@ -17,10 +17,11 @@ oUQDQgAE9yvqkZBi2bp+y8JUYolrS1OVCJ94ICrrvfBJl+vavZBSeZ0dLkqu5zMW
 -----END EC PRIVATE KEY-----
 """
 
-SAVE_DIR = './webhook_data'
+SAVE_DIR = './logs'
 os.makedirs(SAVE_DIR, exist_ok=True)
+os.chmod(SAVE_DIR, 0o777)
 
-LOG_FILE = os.path.join(SAVE_DIR, 'webhook.log')
+LOG_FILE = os.path.join(SAVE_DIR, 'webhooks.log')
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
@@ -79,7 +80,7 @@ def invoice():
         return 'No invoice data found', 400
 
     invoice = data['log']['invoice']
-    print(f"Received webhook: {invoice['id']}, Amount: {invoice['amount']}, type: {data['log']['type']}")
+    print(f"Received webhooks: {invoice['id']}, Amount: {invoice['amount']}, type: {data['log']['type']}")
     print(invoice)
     if(data['log']['type'] == "credited"):
         transfer_credits.generate_transfer(invoice)
@@ -98,7 +99,7 @@ def transfer():
         return 'No transfer data found', 400
 
     transfer = data['log']['transfer']
-    print(f"Received webhook: {data}")
+    print(f"Received webhooks: {data}")
 
     return '', 200
 
@@ -110,7 +111,7 @@ def other():
     data = request.json['event']
     if "log" not in data:
         return 'Invalid event data', 400
-    print(f"Received webhook: {data}")
+    print(f"Received webhooks: {data}")
 
     return '', 200
 

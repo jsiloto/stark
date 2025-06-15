@@ -1,12 +1,14 @@
 version: '3.8'
 
 services:
-  receiver:
-    build: ./receiver
+  webhooks:
+    build: webhooks
+    volumes:
+      - ./logs:/app/logs
     ports:
       - "5000:5000"
 
-  sender:
-    build: ./sender
+  invoice:
+    build: ./invoice
     depends_on:
-      - receiver
+      - webhooks

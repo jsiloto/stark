@@ -5,18 +5,18 @@
 virtualenv venv
 source venv/bin/activate
 pip install -r invoice/requirements.txt
-pip install -r webhook/requirements.txt
+pip install -r webhooks/requirements.txt
 ```
 
 ## Running
 ```bash
 # Use separate terminals for each command
 ngrok http 5000
-python webhook/webhooks.py
+python webhooks/webhooks.py
 ```
 
 # Running with Docker
 ```bash
 docker-compose up -d
-tail -f invoice/logs/invoice.log3
+tail -f logs/webhooks.log
 ```

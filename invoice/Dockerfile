@@ -1,9 +1,9 @@
 FROM python:3.11-slim
 
 WORKDIR /app
-COPY sender.py .
+COPY invoice.py .
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "sender.py", "--recurrent"]
+CMD ["python", "invoice.py", "--recurrent"]
