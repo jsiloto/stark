@@ -3,6 +3,7 @@ import uuid
 import json
 import os
 import starkbank
+import logging
 from starkbank import Transfer
 
 private_key_content = """
@@ -16,12 +17,20 @@ oUQDQgAE9yvqkZBi2bp+y8JUYolrS1OVCJ94ICrrvfBJl+vavZBSeZ0dLkqu5zMW
 -----END EC PRIVATE KEY-----
 """
 
-
+SAVE_DIR = './webhook_data'
+os.makedirs(SAVE_DIR, exist_ok=True)
+# Configure logging
+LOG_FILE = os.path.join(SAVE_DIR, 'webhook.log')
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s'
+)
 
 app = Flask(__name__)
 
-SAVE_DIR = '../webhook_data'
-os.makedirs(SAVE_DIR, exist_ok=True)
+
+
 
 class TransferCredits:
     def __init__(self):
@@ -53,6 +62,7 @@ class TransferCredits:
 transfer_credits = TransferCredits()
 @app.route('/invoice', methods=['POST'])
 def invoice():
+    logging.info(f"/invoice: {request.json}")
     print("============================== INVOICE ==============================")
     data = request.json['event']
     if "log" not in data:
@@ -70,6 +80,7 @@ def invoice():
 
 @app.route('/transfer', methods=['POST'])
 def transfer():
+    logging.info(f"/transfer: {request.json}")
     print("============================ Transfer Webhook ============================")
     data = request.json['event']
     if "log" not in data:
@@ -86,6 +97,7 @@ def transfer():
 
 @app.route('/other', methods=['POST'])
 def other():
+    logging.info(f"/other: {request.json}")
     print("============================ OTHER Webhook ============================")
     data = request.json['event']
     if "log" not in data:
